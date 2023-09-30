@@ -37,4 +37,21 @@ describe("GIVEN home page", () => {
       expect(await screen.getByText("Correct!")).toBeInTheDocument();
     });
   });
+
+  describe("WHEN entering incorrect guess", () => {
+    test("THEN it should have an incorrect message", async () => {
+      render(<App />);
+      const user = userEvent.setup();
+
+      expect(await screen.queryByText("Incorrect :(")).not.toBeInTheDocument();
+
+      const guessInput = await screen.getByRole("textbox");
+      await user.type(guessInput, "I am");
+
+      const guessButton = await screen.getByRole("button", { name: "guess" });
+      await user.click(guessButton);
+
+      expect(await screen.getByText("Incorrect :(")).toBeInTheDocument();
+    });
+  });
 });

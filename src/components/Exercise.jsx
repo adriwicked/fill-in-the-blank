@@ -2,7 +2,10 @@ import { useState } from "react";
 
 export default function Exercise({ sentence }) {
   const sentenceChunks = parseSentence(sentence);
-  const [validGuess, setValidGuess] = useState(false);
+  const inputChunkObj = sentenceChunks.find((c) => c.isInput);
+  const [validGuess, setValidGuess] = useState(null);
+  const [guess, setGuess] = useState("");
+  const [guessed, setGuessed] = useState(false);
 
   function parseSentence(sentence) {
     const re = /(\[[^\]]*\])/;
@@ -24,7 +27,8 @@ export default function Exercise({ sentence }) {
   function handleGuess(e) {
     e.preventDefault();
 
-    setValidGuess(true);
+    setValidGuess(guess === inputChunkObj.text);
+    setGuessed(true);
   }
 
   return (
@@ -33,14 +37,13 @@ export default function Exercise({ sentence }) {
         {sentenceChunks.map((chunk, i) => {
           // prettier-ignore
           return chunk.isInput
-            ? <input key={i}></input>
+            ? <input key={i} onChange={e => setGuess(e.target.value)}></input>
             : <p key={i}>{chunk.text}</p>
         })}
 
         <input type="submit" value="guess"></input>
       </form>
-      {}
-      {validGuess && <p>Correct!</p>}
+      {guessed && (validGuess ? <p>Correct!</p> : <p>Incorrect :(</p>)}
     </>
   );
 }
