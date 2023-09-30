@@ -5,10 +5,17 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Style, test and build
+
     runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
 
     steps:
       - name: Checkout repository
