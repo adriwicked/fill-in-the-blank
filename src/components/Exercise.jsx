@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Exercise.css";
 
 export default function Exercise({ sentence }) {
   const sentenceChunks = parseSentence(sentence);
@@ -33,15 +34,22 @@ export default function Exercise({ sentence }) {
 
   return (
     <>
-      <form onSubmit={handleGuess}>
-        {sentenceChunks.map((chunk, i) => {
-          // prettier-ignore
-          return chunk.isInput
-            ? <input key={i} onChange={e => setGuess(e.target.value)}></input>
-            : <p key={i}>{chunk.text}</p>
-        })}
+      <form onSubmit={handleGuess} className="exerciseForm">
+        <fieldset className="exercise">
+          {sentenceChunks.map((chunk, i) => {
+            return chunk.isInput ? (
+              <input
+                key={i}
+                onChange={(e) => setGuess(e.target.value)}
+                className="guessInput"
+              ></input>
+            ) : (
+              <p key={i}>{chunk.text}</p>
+            );
+          })}
+        </fieldset>
 
-        <input type="submit" value="guess"></input>
+        <input type="submit" value="guess" className="submitButton"></input>
       </form>
       {guessed && (validGuess ? <p>Correct!</p> : <p>Incorrect :(</p>)}
     </>
