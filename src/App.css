@@ -7,9 +7,10 @@
 
 .title {
   margin-bottom: 50px;
+  font-weight: 200;
 }
 
 .blank {
-  font-weight: 200;
+  font-weight: bold;
   border-bottom: 5px solid red;
 }
