@@ -2,10 +2,6 @@ import { useState } from "react";
 import "./Exercise.css";
 
 export default function Exercise({ sentence, onCorrectAnswer }) {
-  if (!sentence) {
-    return <p>Loading...</p>;
-  }
-
   const sentenceChunks = parseSentence(sentence);
   const inputChunkObj = sentenceChunks.find((c) => c.isInput);
   const [validGuess, setValidGuess] = useState(null);
@@ -13,6 +9,9 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
   const [guessed, setGuessed] = useState(false);
 
   function parseSentence(sentence) {
+    if (!sentence) {
+      return [];
+    }
     const re = /(\[[^\]]*\])/;
     const chunks = sentence.split(re);
 
@@ -38,6 +37,10 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
       setGuess("");
       onCorrectAnswer();
     }
+  }
+
+  if (!sentence) {
+    return <p>Loading...</p>;
   }
 
   return (
