@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Exercise.css";
 
-export default function Exercise({ sentence }) {
+export default function Exercise({ sentence, onCorrectAnswer }) {
   const sentenceChunks = sentence ? parseSentence(sentence) : [];
   const inputChunkObj = sentenceChunks.find((c) => c.isInput);
   const [validGuess, setValidGuess] = useState(null);
@@ -27,9 +27,13 @@ export default function Exercise({ sentence }) {
 
   function handleGuess(e) {
     e.preventDefault();
-
-    setValidGuess(guess === inputChunkObj.text);
+    const isValid = guess === inputChunkObj.text;
+    setValidGuess(isValid);
     setGuessed(true);
+    if (isValid) {
+      setGuess("");
+      onCorrectAnswer();
+    }
   }
 
   return (
@@ -41,6 +45,7 @@ export default function Exercise({ sentence }) {
               return chunk.isInput ? (
                 <input
                   key={i}
+                  value={guess}
                   onChange={(e) => setGuess(e.target.value)}
                   className="guessInput"
                 ></input>
