@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Exercise.css";
 
 export default function Exercise({ sentence }) {
-  const sentenceChunks = parseSentence(sentence);
+  const sentenceChunks = sentence ? parseSentence(sentence) : [];
   const inputChunkObj = sentenceChunks.find((c) => c.isInput);
   const [validGuess, setValidGuess] = useState(null);
   const [guess, setGuess] = useState("");
@@ -36,17 +36,21 @@ export default function Exercise({ sentence }) {
     <>
       <form onSubmit={handleGuess} className="exerciseForm">
         <fieldset className="exercise">
-          {sentenceChunks.map((chunk, i) => {
-            return chunk.isInput ? (
-              <input
-                key={i}
-                onChange={(e) => setGuess(e.target.value)}
-                className="guessInput"
-              ></input>
-            ) : (
-              <p key={i}>{chunk.text}</p>
-            );
-          })}
+          {sentenceChunks.length > 0 ? (
+            sentenceChunks.map((chunk, i) => {
+              return chunk.isInput ? (
+                <input
+                  key={i}
+                  onChange={(e) => setGuess(e.target.value)}
+                  className="guessInput"
+                ></input>
+              ) : (
+                <p key={i}>{chunk.text}</p>
+              );
+            })
+          ) : (
+            <p>Loading...</p>
+          )}
         </fieldset>
 
         <input type="submit" value="guess" className="submitButton"></input>
