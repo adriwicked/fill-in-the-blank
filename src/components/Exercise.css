@@ -11,6 +11,7 @@
 }
 
 .exercise p {
+  font-size: 32px;
   margin: 0;
 }
 
@@ -19,10 +20,11 @@
   text-align: center;
   font: inherit;
   font-weight: bold;
-  margin: 0 1em;
+  font-size: 32px;
+  margin: 0 5px;
   background: transparent;
   border: none;
-  border-bottom: 2px solid white;
+  border-bottom: 3px solid red;
 }
 
 .submitButton {

@@ -76,7 +76,7 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
 
         <input type="submit" value="guess" className="submitButton" />
       </form>
-      {guessed && isCorrect ? <p>Correct!</p> : <p>Incorrect :(</p>}
+      {guessed && (isCorrect ? <p>Correct!</p> : <p>Incorrect :(</p>)}
     </>
   );
 }
