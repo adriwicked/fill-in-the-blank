@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Exercise.css";
 
 export default function Exercise({ sentence, onCorrectAnswer }) {
-  const sentenceChunks = parseSentence(sentence);
-  const inputChunkObj = sentenceChunks.find((c) => c.isInput);
-  const [validGuess, setValidGuess] = useState(null);
-  const [guess, setGuess] = useState("");
+  const [chunks, setChunks] = useState([]);
+  const [isCorrect, setIsCorrect] = useState(false);
   const [guessed, setGuessed] = useState(false);
+
+  useEffect(() => {
+    setChunks(parseSentence(sentence));
+  }, [sentence]);
 
   function parseSentence(sentence) {
     if (!sentence) {
@@ -28,13 +30,24 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
     return sentenceParts;
   }
 
+  function updateChunks(idx, guess) {
+    const newChunks = chunks.map((c, i) => {
+      return i === idx ? Object.assign({}, c, { guess }) : c;
+    });
+    setChunks(newChunks);
+  }
+
   function handleGuess(e) {
     e.preventDefault();
-    const isValid = guess === inputChunkObj.text;
-    setValidGuess(isValid);
+
+    const guessesAreValid = chunks
+      .filter((c) => c.isInput)
+      .every((c) => c.guess === c.text);
+
+    setIsCorrect(guessesAreValid);
     setGuessed(true);
-    if (isValid) {
-      setGuess("");
+
+    if (guessesAreValid) {
       onCorrectAnswer();
     }
   }
@@ -47,12 +60,12 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
     <>
       <form onSubmit={handleGuess} className="exerciseForm">
         <fieldset className="exercise">
-          {sentenceChunks.map((chunk, i) => {
+          {chunks.map((chunk, i) => {
             return chunk.isInput ? (
               <input
                 key={i}
-                value={guess}
-                onChange={(e) => setGuess(e.target.value)}
+                value={chunk.guess}
+                onChange={(e) => updateChunks(i, e.target.value)}
                 className="guessInput"
               ></input>
             ) : (
@@ -61,9 +74,9 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
           })}
         </fieldset>
 
-        <input type="submit" value="guess" className="submitButton"></input>
+        <input type="submit" value="guess" className="submitButton" />
       </form>
-      {guessed && (validGuess ? <p>Correct!</p> : <p>Incorrect :(</p>)}
+      {guessed && isCorrect ? <p>Correct!</p> : <p>Incorrect :(</p>}
     </>
   );
 }
