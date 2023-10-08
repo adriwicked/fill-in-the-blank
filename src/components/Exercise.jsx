@@ -76,9 +76,17 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
         {guessed && (
           <div className="circle">
             {isCorrect ? (
-              <i className="fa-solid fa-check"></i>
+              <i
+                className="fa-solid fa-check"
+                role="img"
+                aria-label="correct"
+              ></i>
             ) : (
-              <i className="fa-solid fa-x"></i>
+              <i
+                className="fa-solid fa-x"
+                role="img"
+                aria-label="incorrect"
+              ></i>
             )}
           </div>
         )}

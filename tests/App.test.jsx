@@ -47,14 +47,18 @@ describe("GIVEN home page", () => {
       const guessInput = await screen.findByRole("textbox");
       const guessButton = await screen.findByRole("button", { name: "guess" });
 
-      expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
+      expect(
+        await screen.queryByRole("img", { name: "correct" })
+      ).not.toBeInTheDocument();
 
       await act(async () => {
         await user.type(guessInput, "He is");
         await user.click(guessButton);
       });
 
-      expect(await screen.findByText("Correct!")).toBeInTheDocument();
+      expect(
+        await screen.findByRole("img", { name: "correct" })
+      ).toBeInTheDocument();
     });
 
     test("THEN it is not case sensistive", async () => {
@@ -63,14 +67,18 @@ describe("GIVEN home page", () => {
       const guessInput = await screen.findByRole("textbox");
       const guessButton = await screen.findByRole("button", { name: "guess" });
 
-      expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
+      expect(
+        await screen.queryByRole("img", { name: "correct" })
+      ).not.toBeInTheDocument();
 
       await act(async () => {
         await user.type(guessInput, "HE IS");
         await user.click(guessButton);
       });
 
-      expect(await screen.findByText("Correct!")).toBeInTheDocument();
+      expect(
+        await screen.findByRole("img", { name: "correct" })
+      ).toBeInTheDocument();
     });
 
     test("THEN it should change to next sentence", async () => {
@@ -105,14 +113,18 @@ describe("GIVEN home page", () => {
       const guessInput = await screen.findByRole("textbox");
       const guessButton = await screen.findByRole("button", { name: "guess" });
 
-      expect(await screen.queryByText("Incorrect :(")).not.toBeInTheDocument();
+      expect(
+        await screen.queryByRole("img", { name: "incorrect" })
+      ).not.toBeInTheDocument();
 
       await act(async () => {
         await user.type(guessInput, "I am");
         await user.click(guessButton);
       });
 
-      expect(await screen.findByText("Incorrect :(")).toBeInTheDocument();
+      expect(
+        await screen.findByRole("img", { name: "incorrect" })
+      ).toBeInTheDocument();
     });
   });
 });

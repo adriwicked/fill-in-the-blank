@@ -61,13 +61,17 @@ describe("GIVEN Exercise component", () => {
       const guessButton = await screen.findByRole("button", { name: "guess" });
       const user = userEvent.setup();
 
-      expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
+      expect(
+        await screen.queryByRole("img", { name: "correct" })
+      ).not.toBeInTheDocument();
 
       await user.type(guessInputs[0], "He has");
       await user.type(guessInputs[1], "He is");
       await user.click(guessButton);
 
-      expect(await screen.findByText("Correct!")).toBeInTheDocument();
+      expect(
+        await screen.findByRole("img", { name: "correct" })
+      ).toBeInTheDocument();
     });
   });
 });
