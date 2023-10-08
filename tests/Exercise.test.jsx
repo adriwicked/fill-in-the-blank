@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import Exercise from "../src/components/Exercise";
+import userEvent from "@testing-library/user-event";
 
 describe("GIVEN Exercise component", () => {
   describe("WHEN no sentence is passed", () => {
@@ -32,6 +33,24 @@ describe("GIVEN Exercise component", () => {
 
       const guessInput = screen.getByRole("textbox");
       expect(guessInput).toBeInTheDocument();
+    });
+  });
+
+  describe("WHEN a sentence with two blanks is passed", () => {
+    test("THEN Exercise can be completed", async () => {
+      const sentence = "Steve is ill. [He has] a fever. [He is] in bed.";
+      render(<Exercise sentence={sentence} onCorrectAnswer={() => null} />);
+      const guessInputs = await screen.findAllByRole("textbox");
+      const guessButton = await screen.findByRole("button", { name: "guess" });
+      const user = userEvent.setup();
+
+      expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
+
+      await user.type(guessInputs[0], "He has");
+      await user.type(guessInputs[1], "He is");
+      await user.click(guessButton);
+
+      expect(await screen.findByText("Correct!")).toBeInTheDocument();
     });
   });
 });
