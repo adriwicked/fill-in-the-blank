@@ -37,6 +37,21 @@ describe("GIVEN home page", () => {
       expect(await screen.findByText("Correct!")).toBeInTheDocument();
     });
 
+    test("THEN it is not case sensistive", async () => {
+      render(<App />);
+      const user = userEvent.setup();
+
+      expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
+
+      const guessInput = await screen.findByRole("textbox");
+      await user.type(guessInput, "HE IS");
+
+      const guessButton = await screen.findByRole("button", { name: "guess" });
+      await user.click(guessButton);
+
+      expect(await screen.findByText("Correct!")).toBeInTheDocument();
+    });
+
     test("THEN it should change to next sentence", async () => {
       render(<App />);
       const user = userEvent.setup();

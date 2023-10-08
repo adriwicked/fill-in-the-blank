@@ -30,7 +30,7 @@
 .submitButton {
   border: none;
   padding: 0.5em;
-  width: 100%;
+  width: 100px;
   font-weight: bold;
   font-size: 1em;
   background: transparent;

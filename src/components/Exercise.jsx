@@ -42,7 +42,7 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
 
     const guessesAreValid = chunks
       .filter((c) => c.isInput)
-      .every((c) => c.guess === c.text);
+      .every((c) => c.guess.toLowerCase() === c.text.toLowerCase());
 
     setIsCorrect(guessesAreValid);
     setGuessed(true);
