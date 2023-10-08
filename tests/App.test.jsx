@@ -1,8 +1,27 @@
 import { render, screen } from "@testing-library/react";
-import App from "../src/App";
 import userEvent from "@testing-library/user-event";
+import App from "../src/App";
+import { act } from "react-dom/test-utils";
 
 describe("GIVEN home page", () => {
+  beforeAll(() => {
+    vi.mock("../src/services/sentences.js", async (importOriginal) => {
+      const original = await importOriginal();
+      return {
+        ...original,
+        getSentences: () => {
+          return Promise.resolve([
+            "Steve is ill. [He is] in bed.",
+            "I'm not hungry, but [I am] thirsty.",
+            "Mr Thomas is a very old man. [He is] 98.",
+            "These chairs aren't beautiful, but [they are] comfortable.",
+            "The weather is nice today. [It is] warm and sunny.",
+          ]);
+        },
+      };
+    });
+  });
+
   test("THEN it should have title", async () => {
     render(<App />);
 
@@ -25,14 +44,15 @@ describe("GIVEN home page", () => {
     test("THEN it should have a correct message", async () => {
       render(<App />);
       const user = userEvent.setup();
+      const guessInput = await screen.findByRole("textbox");
+      const guessButton = await screen.findByRole("button", { name: "guess" });
 
       expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
 
-      const guessInput = await screen.findByRole("textbox");
-      await user.type(guessInput, "He is");
-
-      const guessButton = await screen.findByRole("button", { name: "guess" });
-      await user.click(guessButton);
+      await act(async () => {
+        await user.type(guessInput, "He is");
+        await user.click(guessButton);
+      });
 
       expect(await screen.findByText("Correct!")).toBeInTheDocument();
     });
@@ -40,14 +60,15 @@ describe("GIVEN home page", () => {
     test("THEN it is not case sensistive", async () => {
       render(<App />);
       const user = userEvent.setup();
+      const guessInput = await screen.findByRole("textbox");
+      const guessButton = await screen.findByRole("button", { name: "guess" });
 
       expect(await screen.queryByText("Correct!")).not.toBeInTheDocument();
 
-      const guessInput = await screen.findByRole("textbox");
-      await user.type(guessInput, "HE IS");
-
-      const guessButton = await screen.findByRole("button", { name: "guess" });
-      await user.click(guessButton);
+      await act(async () => {
+        await user.type(guessInput, "HE IS");
+        await user.click(guessButton);
+      });
 
       expect(await screen.findByText("Correct!")).toBeInTheDocument();
     });
@@ -81,14 +102,15 @@ describe("GIVEN home page", () => {
     test("THEN it should have an incorrect message", async () => {
       render(<App />);
       const user = userEvent.setup();
+      const guessInput = await screen.findByRole("textbox");
+      const guessButton = await screen.findByRole("button", { name: "guess" });
 
       expect(await screen.queryByText("Incorrect :(")).not.toBeInTheDocument();
 
-      const guessInput = await screen.findByRole("textbox");
-      await user.type(guessInput, "I am");
-
-      const guessButton = await screen.findByRole("button", { name: "guess" });
-      await user.click(guessButton);
+      await act(async () => {
+        await user.type(guessInput, "I am");
+        await user.click(guessButton);
+      });
 
       expect(await screen.findByText("Incorrect :(")).toBeInTheDocument();
     });
