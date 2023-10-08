@@ -73,10 +73,17 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
             );
           })}
         </fieldset>
-
+        {guessed && (
+          <div className="circle">
+            {isCorrect ? (
+              <i className="fa-solid fa-check"></i>
+            ) : (
+              <i className="fa-solid fa-x"></i>
+            )}
+          </div>
+        )}
         <input type="submit" value="guess" className="submitButton" />
       </form>
-      {guessed && (isCorrect ? <p>Correct!</p> : <p>Incorrect :(</p>)}
     </>
   );
 }
