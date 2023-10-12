@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Exercise.css";
 
 export default function Exercise({ sentence, onCorrectAnswer }) {
   const [chunks, setChunks] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
   const [guessed, setGuessed] = useState(false);
+  const [firstRender, setFirstRender] = useState(true);
+  const inputsRefs = useRef([]);
 
   useEffect(() => {
     setChunks(parseSentence(sentence));
@@ -30,7 +32,7 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
     return sentenceParts;
   }
 
-  function updateChunks(idx, guess) {
+  function updateGuesses(idx, guess) {
     const newChunks = chunks.map((c, i) => {
       return i === idx ? Object.assign({}, c, { guess }) : c;
     });
@@ -49,6 +51,15 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
 
     if (guessesAreValid) {
       onCorrectAnswer();
+      inputsRefs.current[0].focus();
+    }
+  }
+
+  function setFocusOnSaveRef(ref) {
+    inputsRefs.current.push(ref);
+    if (firstRender) {
+      inputsRefs.current[0].focus();
+      setFirstRender(false);
     }
   }
 
@@ -64,8 +75,9 @@ export default function Exercise({ sentence, onCorrectAnswer }) {
             return chunk.isInput ? (
               <input
                 key={i}
+                ref={setFocusOnSaveRef}
                 value={chunk.guess}
-                onChange={(e) => updateChunks(i, e.target.value)}
+                onChange={(e) => updateGuesses(i, e.target.value)}
                 className="guessInput"
               ></input>
             ) : (

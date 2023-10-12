@@ -40,6 +40,12 @@ describe("GIVEN home page", () => {
     expect(sentenceParagraph).toBeInTheDocument();
   });
 
+  test("THEN first input has focus", async () => {
+    render(<App />);
+
+    expect(await screen.findByRole("textbox")).toHaveFocus();
+  });
+
   describe("WHEN entering correct guess", () => {
     test("THEN it should have a correct message", async () => {
       render(<App />);
@@ -87,10 +93,14 @@ describe("GIVEN home page", () => {
       const guessInput = await screen.findByRole("textbox");
       const guessButton = await screen.findByRole("button", { name: "guess" });
 
+      expect(await screen.queryByText("Steve is ill.")).toBeInTheDocument();
+
       await user.type(guessInput, "He is");
       await user.click(guessButton);
 
-      expect(await screen.queryByText("Steve is ill.")).not.toBeInTheDocument();
+      expect(
+        await screen.queryByText("I'm not hungry, but")
+      ).toBeInTheDocument();
     });
 
     test("THEN it should empty the input", async () => {
