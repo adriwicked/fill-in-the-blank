@@ -13,9 +13,6 @@ describe("GIVEN home page", () => {
           return Promise.resolve([
             "Steve is ill. [He is] in bed.",
             "I'm not hungry, but [I am] thirsty.",
-            "Mr Thomas is a very old man. [He is] 98.",
-            "These chairs aren't beautiful, but [they are] comfortable.",
-            "The weather is nice today. [It is] warm and sunny.",
           ]);
         },
       };
@@ -113,6 +110,26 @@ describe("GIVEN home page", () => {
       await user.click(guessButton);
 
       expect(guessInput).toHaveValue("");
+    });
+
+    test("THEN shows end state if was last sentence", async () => {
+      render(<App />);
+      const user = userEvent.setup();
+      const guessInput = await screen.findByRole("textbox");
+      const guessButton = await screen.findByRole("button", { name: "guess" });
+
+      await user.type(guessInput, "He is");
+      await user.click(guessButton);
+
+      const nextGuessInput = await screen.findByRole("textbox");
+      await user.type(nextGuessInput, "I am");
+      await user.click(guessButton);
+
+      const endTitle = await screen.findByRole("heading", {
+        name: "You finished the round, good job!",
+      });
+
+      expect(endTitle).toBeInTheDocument();
     });
   });
 

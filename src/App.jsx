@@ -15,12 +15,25 @@ export default function App() {
     setIdx(idx + 1);
   }
 
+  function handleClick() {
+    setIdx(0);
+  }
+
   return (
     <>
       <h1 className="title">
         fill in the <span className="blank">blank</span>
       </h1>
-      <Exercise sentence={sentences[idx]} onCorrectAnswer={setNextSentence} />
+      {idx < sentences.length ? (
+        <Exercise sentence={sentences[idx]} onCorrectAnswer={setNextSentence} />
+      ) : (
+        <section>
+          <h2>You finished the round, good job!</h2>
+          <button onClick={handleClick} className="submitButton">
+            Try again
+          </button>
+        </section>
+      )}
     </>
   );
 }
